@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Falling Flower Animation</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #fff0f5; /* light pink background */
+      font-family: sans-serif;
+    }
+
+    .background-text {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 60px;
+      font-weight: bold;
+      color: rgba(200, 200, 200, 0.5);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="background-text">Parmar Ravina</div>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const flowerCount = 40;
+    const flowers = [];
+
+    // Flower emoji or shape
+    const flowerChar = "🌸";
+
+    for (let i = 0; i < flowerCount; i++) {
+      flowers.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * -canvas.height,
+        size: Math.random() * 30 + 20,
+        speed: Math.random() * 2 + 1,
+        sway: Math.random() * 2,
+        angle: Math.random() * Math.PI * 2,
+        rotateSpeed: Math.random() * 0.02 + 0.005
+      });
+    }
+
+    function drawFlower(flower) {
+      ctx.save();
+      ctx.font = `${flower.size}px serif`;
+      ctx.translate(flower.x, flower.y);
+      ctx.rotate(flower.angle);
+      ctx.fillText(flowerChar, 0, 0);
+      ctx.restore();
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let flower of flowers) {
+        flower.y += flower.speed;
+        flower.x += Math.sin(flower.y * 0.01) * flower.sway;
+        flower.angle += flower.rotateSpeed;
+
+        if (flower.y > canvas.height + 50) {
+          flower.y = -50;
+          flower.x = Math.random() * canvas.width;
+        }
+
+        drawFlower(flower);
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+
+</body>
+</html>
